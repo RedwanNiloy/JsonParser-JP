@@ -16,6 +16,8 @@ namespace JsonParser_Final
         {
             _tokens = tokens;
             _position = 0;
+
+            
         }
 
         public object Parse()
@@ -27,30 +29,30 @@ namespace JsonParser_Final
         {
             var token = _tokens[_position];
 
-            Console.WriteLine(token.Type);    
+           //Console.WriteLine(token.Value);    
             switch (token.Type)
             {
                 case JsonTokenType.String: return Consume().Value;
                 case JsonTokenType.Number: return double.Parse(Consume().Value);
-                case JsonTokenType.True: return true;
-                case JsonTokenType.False: return false;
+                case JsonTokenType.True: _position++; return true;
+                case JsonTokenType.False: _position++; return false;
                 case JsonTokenType.Null: return null;
                 case JsonTokenType.LeftBrace: return ParseObject();
                 case JsonTokenType.LeftBracket: return ParseArray();
+               // case JsonTokenType.EOF: return "EOF";
                 default: throw new Exception($"Unexpected token: {token}");
             }
         }
 
         private JsonToken Consume()
         {
+           // Console.WriteLine(_tokens[_position++]);
             return _tokens[_position++];
         }
 
         private Dictionary<string, object> ParseObject()
         {
             var obj = new Dictionary<string, object>();
-           
-            
 
 
 
@@ -58,22 +60,28 @@ namespace JsonParser_Final
                 while (_tokens[_position].Type != JsonTokenType.RightBrace)
                 {
 
-                     
-                   
-                    var key = Consume().Value;
-                     Consume(); //consum :
 
-                var value = ParseValue();
+                   // Console.WriteLine(_tokens[_position]);
+                    var key = Consume().Value;
+
+
+
+                    Consume();
+
+                    var value = ParseValue();
                     obj[key] = value;
 
-                   
-               
+
+
                 if (_tokens[_position].Type == JsonTokenType.Comma)
-                        Consume(); // Consume ','
-                }
-           // Console.WriteLine(_tokens[_position].Type);
-             // Consume();
-            // Consume '}'
+                { Consume(); } // Consume ','
+
+               
+
+
+
+            }
+           
             return obj;
         }
 

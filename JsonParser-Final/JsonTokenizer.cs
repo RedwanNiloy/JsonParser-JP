@@ -24,9 +24,10 @@ namespace JsonParser_Final
             while (_position < _json.Length)
             {
                 char current = _json[_position];
+              //  Console.WriteLine("here "+current);
 
                 if (char.IsWhiteSpace(current))
-                {
+                {   
                     _position++;
                     continue;
                 }
@@ -52,7 +53,7 @@ namespace JsonParser_Final
                 _position++;
             }
 
-            tokens.Add(new JsonToken(JsonTokenType.EOF));
+            tokens.Add(new JsonToken(JsonTokenType.EOF,"EOF"));
             return tokens;
         }
 
@@ -65,7 +66,7 @@ namespace JsonParser_Final
                 sb.Append(_json[_position]);
                 _position++;
             }
-            _position++;  // Skip closing quote
+          
             return new JsonToken(JsonTokenType.String, sb.ToString());
         }
 
